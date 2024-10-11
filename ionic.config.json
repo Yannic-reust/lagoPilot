@@ -1,0 +1,7 @@
+{
+  "name": "lagoPilot",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
