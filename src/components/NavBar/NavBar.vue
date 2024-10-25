@@ -4,8 +4,8 @@
     <ion-router-outlet></ion-router-outlet>
     <ion-tab-bar slot="bottom">
       <ion-tab-button tab="home" href="/home">
-        <ion-icon :icon="playCircle" />
-        <ion-label>Listen Now</ion-label>
+        <ion-icon :icon="home" />
+        <ion-label>Home</ion-label>
       </ion-tab-button>
       <ion-tab-button tab="stopWatch" href="/stopWatch">
         <ion-icon :icon="stopwatch" />
@@ -32,7 +32,7 @@ import {
   IonIcon,
   IonLabel,
 } from "@ionic/vue";
-import { playCircle, stopwatch, boat, options } from "ionicons/icons";
+import { home, stopwatch, boat, options } from "ionicons/icons";
 
 export default {
   components: {
@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return {
-      playCircle,
+      home,
       stopwatch,
       boat,
       options,
