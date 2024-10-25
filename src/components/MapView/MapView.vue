@@ -1,5 +1,7 @@
 <template>
-  <div id="map" style="height: 100%"></div>
+  <ion-content>
+    <div id="map" style="height: 100%"></div>
+  </ion-content>
 </template>
 
 <script>
@@ -16,26 +18,17 @@ export default {
     const marker = ref(null);
 
     onMounted(async () => {
-      // Initialize the map with a default view
-      map.value = L.map("map").setView([51.505, -0.09], 13);
+      await initMap();
 
-      // Add a tile layer
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "© OpenStreetMap",
-      }).addTo(map.value);
-
-      // Center map to current position on load
       const currentPosition = await getCurrentPosition();
       if (currentPosition) {
         const { latitude, longitude } = currentPosition.coords;
         map.value.setView([latitude, longitude], 13);
-
-        // Add a marker for the current location
         marker.value = L.marker([latitude, longitude]).addTo(map.value);
       }
 
-      // Watch position to track changes
+      map.value.invalidateSize(); // Force recalculation of map size
+
       watchPosition((position) => {
         const { latitude, longitude } = position.coords;
         if (marker.value) {
@@ -47,11 +40,17 @@ export default {
       });
     });
 
-    // Function to get the current position
+    async function initMap() {
+      map.value = L.map("map").setView([51.505, -0.09], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "Map data © OpenStreetMap contributors",
+      }).addTo(map.value);
+    }
+
     async function getCurrentPosition() {
       try {
         const coordinates = await Geolocation.getCurrentPosition();
-        console.log("Current position:", coordinates);
         return coordinates;
       } catch (error) {
         console.error("Error getting location:", error);
@@ -59,25 +58,19 @@ export default {
       }
     }
 
-    // Function to watch position changes
     function watchPosition(callback) {
       Geolocation.watchPosition({}, (position, err) => {
-        if (position) {
-          console.log("Position changed:", position);
-          callback(position);
-        }
-        if (err) {
-          console.error("Error watching position:", err);
-        }
+        if (position) callback(position);
+        if (err) console.error("Error watching position:", err);
       });
     }
   },
 };
 </script>
 
-<style>
+<style scoped>
 #map {
+  height: 100vh;
   width: 100%;
-  height: 100vh; /* Full height */
 }
 </style>
