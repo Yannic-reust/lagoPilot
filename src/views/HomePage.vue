@@ -15,6 +15,7 @@
 <script setup lang="ts">
 //@ts-ignore
 import MapView from "@/components/MapView/MapView.vue";
+
 import {
   IonContent,
   IonHeader,

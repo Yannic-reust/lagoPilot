@@ -1,71 +1,69 @@
 <template>
   <ion-content>
-    <div id="map" style="height: 100%"></div>
+    <div id="map" class="z-40" style="height: 100%"></div>
+    <SpeedOverlay
+      :position="currentPosition"
+      class="absolute left-2 bottom-2 z-50"
+    />
   </ion-content>
 </template>
 
-<script>
-import { onMounted, ref } from "vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { IonContent } from "@ionic/vue";
 import { Geolocation } from "@capacitor/geolocation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 
-export default {
-  name: "MapView",
-  setup() {
-    const map = ref(null);
-    const marker = ref(null);
+const map = ref(null);
+const marker = ref(null);
+const currentPosition = ref(null); // Stores the current position to pass to SpeedOverlay
 
-    onMounted(async () => {
-      await initMap();
+// Initialize the map
+async function initMap() {
+  map.value = L.map("map").setView([51.505, -0.09], 13);
+  L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "Map data © OpenStreetMap contributors",
+  }).addTo(map.value);
+}
 
-      const currentPosition = await getCurrentPosition();
-      if (currentPosition) {
-        const { latitude, longitude } = currentPosition.coords;
-        map.value.setView([latitude, longitude], 13);
-        marker.value = L.marker([latitude, longitude]).addTo(map.value);
-      }
+// Watch position updates
+function watchPosition(callback) {
+  Geolocation.watchPosition({}, (position, err) => {
+    if (position) callback(position);
+    if (err) console.error("Error watching position:", err);
+  });
+}
 
-      map.value.invalidateSize(); // Force recalculation of map size
+onMounted(async () => {
+  await initMap();
 
-      watchPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        if (marker.value) {
-          marker.value.setLatLng([latitude, longitude]);
-        } else {
-          marker.value = L.marker([latitude, longitude]).addTo(map.value);
-        }
-        map.value.setView([latitude, longitude], map.value.getZoom());
-      });
-    });
+  const initialPosition = await Geolocation.getCurrentPosition();
+  if (initialPosition) {
+    const { latitude, longitude } = initialPosition.coords;
+    map.value.setView([latitude, longitude], 13);
+    marker.value = L.marker([latitude, longitude]).addTo(map.value);
+    currentPosition.value = initialPosition; // Set initial position for SpeedOverlay
+  }
 
-    async function initMap() {
-      map.value = L.map("map").setView([51.505, -0.09], 13);
-      L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "Map data © OpenStreetMap contributors",
-      }).addTo(map.value);
+  map.value.invalidateSize(); // Recalculate map size for proper display
+
+  // Update position on location change
+  watchPosition((position) => {
+    const { latitude, longitude } = position.coords;
+    if (marker.value) {
+      marker.value.setLatLng([latitude, longitude]);
+    } else {
+      marker.value = L.marker([latitude, longitude]).addTo(map.value);
     }
+    map.value.setView([latitude, longitude], map.value.getZoom());
 
-    async function getCurrentPosition() {
-      try {
-        const coordinates = await Geolocation.getCurrentPosition();
-        return coordinates;
-      } catch (error) {
-        console.error("Error getting location:", error);
-        return null;
-      }
-    }
-
-    function watchPosition(callback) {
-      Geolocation.watchPosition({}, (position, err) => {
-        if (position) callback(position);
-        if (err) console.error("Error watching position:", err);
-      });
-    }
-  },
-};
+    // Update currentPosition to trigger speed calculation in SpeedOverlay
+    currentPosition.value = position;
+  });
+});
 </script>
 
 <style scoped>
