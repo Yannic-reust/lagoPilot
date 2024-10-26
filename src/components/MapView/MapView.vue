@@ -8,7 +8,7 @@
   </ion-content>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted } from "vue";
 import { IonContent } from "@ionic/vue";
 import { Geolocation } from "@capacitor/geolocation";
