@@ -7,7 +7,6 @@
     />
   </ion-content>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { IonContent } from "@ionic/vue";
@@ -29,6 +28,14 @@ async function initMap() {
   }).addTo(map.value);
 }
 
+// Define a custom icon for the marker
+const customIcon = L.icon({
+  iconUrl: "arrow.png", // Replace with the path to your custom icon
+  iconSize: [32, 32], // Adjust the size as needed
+  iconAnchor: [16, 32], // Anchor point of the icon (center bottom for typical marker)
+  popupAnchor: [0, -32], // Position of the popup relative to the icon
+});
+
 // Watch position updates
 function watchPosition(callback) {
   Geolocation.watchPosition({}, (position, err) => {
@@ -44,7 +51,9 @@ onMounted(async () => {
   if (initialPosition) {
     const { latitude, longitude } = initialPosition.coords;
     map.value.setView([latitude, longitude], 13);
-    marker.value = L.marker([latitude, longitude]).addTo(map.value);
+    marker.value = L.marker([latitude, longitude], { icon: customIcon }).addTo(
+      map.value
+    ); // Apply custom icon here
     currentPosition.value = initialPosition; // Set initial position for SpeedOverlay
   }
 
@@ -56,7 +65,9 @@ onMounted(async () => {
     if (marker.value) {
       marker.value.setLatLng([latitude, longitude]);
     } else {
-      marker.value = L.marker([latitude, longitude]).addTo(map.value);
+      marker.value = L.marker([latitude, longitude], {
+        icon: customIcon,
+      }).addTo(map.value); // Apply custom icon here as well
     }
     map.value.setView([latitude, longitude], map.value.getZoom());
 
@@ -65,10 +76,3 @@ onMounted(async () => {
   });
 });
 </script>
-
-<style scoped>
-#map {
-  height: 100vh;
-  width: 100%;
-}
-</style>
