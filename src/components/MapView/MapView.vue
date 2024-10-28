@@ -20,7 +20,7 @@ const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null); // Stores the current position to pass to SpeedOverlay
 const previousPosition = ref(null); // Tracks the last known position to filter fluctuations
-const MIN_DISTANCE_THRESHOLD = 1; // Minimum distance (in meters) to consider movement
+const MIN_DISTANCE_THRESHOLD = 2; // Minimum distance (in meters) to consider movement
 let positionInterval = null; // Store interval reference for cleanup
 
 // Calculate distance between two positions
@@ -39,12 +39,24 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * c; // Distance in meters
 }
 
+// Calculate the bearing (in degrees) between two positions
+function getBearing(lat1, lon1, lat2, lon2) {
+  const φ1 = (lat1 * Math.PI) / 180;
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x =
+    Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360; // Normalize to 0-360 degrees
+}
+
 // Initialize the map
 async function initMap() {
   map.value = L.map("map").setView([51.505, -0.09], 17);
   L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
     maxZoom: 19,
-    // attribution: "Map data © OpenStreetMap contributors",
   }).addTo(map.value);
 }
 
@@ -77,12 +89,26 @@ async function updatePosition() {
       return;
     }
 
+    // Calculate the bearing if there’s a previous position
+    let bearing = 0;
+    if (previousPosition.value) {
+      bearing = getBearing(
+        previousPosition.value.latitude,
+        previousPosition.value.longitude,
+        latitude,
+        longitude
+      );
+    }
+
     // Update previous position with current for the next check
     previousPosition.value = { latitude, longitude };
 
-    // Update marker position
+    // Update marker position and rotate it
     if (marker.value) {
       marker.value.setLatLng([latitude, longitude]);
+
+      // Apply rotation to the marker icon
+      marker.value.getElement().style.transform = `rotate(${bearing}deg)`;
     } else {
       marker.value = L.marker([latitude, longitude], {
         icon: customIcon,
@@ -115,3 +141,10 @@ onUnmounted(() => {
   }
 });
 </script>
+
+<style scoped>
+/* Ensures smooth rotation transitions for the marker */
+.leaflet-marker-icon {
+  transition: transform 0.1s linear;
+}
+</style>
