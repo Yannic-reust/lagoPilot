@@ -63,7 +63,9 @@ watch(
       const currentSpeed = (distance / timeDiff) * 3.6;
       speed.value = Math.round(currentSpeed);
 
-      console.log("Current Speed (km/h):", speed.value);
+      if (isNaN(speed.value)) {
+        speed.value = 0;
+      }
     }
 
     // Update previous position and timestamp

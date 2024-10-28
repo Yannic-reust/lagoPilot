@@ -19,14 +19,32 @@ import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null); // Stores the current position to pass to SpeedOverlay
+const previousPosition = ref(null); // Tracks the last known position to filter fluctuations
+const MIN_DISTANCE_THRESHOLD = 1; // Minimum distance (in meters) to consider movement
 let positionInterval = null; // Store interval reference for cleanup
+
+// Calculate distance between two positions
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Radius of Earth in meters
+  const φ1 = (lat1 * Math.PI) / 180;
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // Distance in meters
+}
 
 // Initialize the map
 async function initMap() {
   map.value = L.map("map").setView([51.505, -0.09], 17);
   L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
     maxZoom: 19,
-    attribution: "Map data © OpenStreetMap contributors",
+    // attribution: "Map data © OpenStreetMap contributors",
   }).addTo(map.value);
 }
 
@@ -45,6 +63,24 @@ async function updatePosition() {
     });
     const { latitude, longitude } = position.coords;
 
+    // Check if the new position is significantly different from the last
+    if (
+      previousPosition.value &&
+      getDistance(
+        previousPosition.value.latitude,
+        previousPosition.value.longitude,
+        latitude,
+        longitude
+      ) < MIN_DISTANCE_THRESHOLD
+    ) {
+      // Skip update if within the threshold distance
+      return;
+    }
+
+    // Update previous position with current for the next check
+    previousPosition.value = { latitude, longitude };
+
+    // Update marker position
     if (marker.value) {
       marker.value.setLatLng([latitude, longitude]);
     } else {
