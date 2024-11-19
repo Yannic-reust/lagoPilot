@@ -1,17 +1,22 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>BoatPage asd</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
+      <h2 class="mb-4 px-6 mt-8 text-h-md">Notruf</h2>
+      <div class="grid grid-cols-1 gap-4 px-6">
+        <div
+          v-for="(item, index) in storeEmergencyNumbers.numbers"
+          :key="index"
+        >
+          <EmergencyNumber :numbers="item" />
+        </div>
+      </div>
+
+      <h2 class="mb-4 px-6 mt-8 text-h-md">Knoten</h2>
+      <div class="grid grid-cols-1 gap-4 px-6">
+        <div v-for="(item, index) in storeKnots.knots" :key="index">
+          <KnotDropdown :knot="item" />
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -24,34 +29,15 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/vue";
+
+import KnotDropdown from "@/components/KnotDropdown/KnotDropdown.vue";
+import EmergencyNumber from "@/components/EmergencyNumber/EmergencyNumber.vue";
+
+import { useKnotsStore } from "../../store/knotsStore";
+const storeKnots = useKnotsStore();
+
+import { useEmergencyNumbersStore } from "../../store/emergencyNumbersStore";
+const storeEmergencyNumbers = useEmergencyNumbersStore();
 </script>
 
-<style scoped>
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-</style>
+<style scoped></style>

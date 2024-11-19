@@ -24,7 +24,7 @@
       <!-- Add Button -->
       <ion-fab vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button @click="openAddPersonDialog">
-          <ion-icon name="add-outline"></ion-icon>
+          <ion-icon :icon="addOutline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
@@ -74,7 +74,9 @@ import {
   IonIcon,
   IonModal,
   IonInput,
+  IonButtons,
 } from "@ionic/vue";
+import { addOutline } from "ionicons/icons";
 
 import { useStopWatchStore } from "../../store/stopWatchStore";
 
