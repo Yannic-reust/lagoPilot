@@ -6,9 +6,9 @@
 
       <!-- Play/Pause Buttons -->
       <div class="controls">
-        <!-- <ion-button @click="toggleTimer">{{
+        <ion-button @click="toggleTimer">{{
           isRunning ? "Pause" : "Play"
-        }}</ion-button> -->
+        }}</ion-button>
       </div>
 
       <!-- List of People -->

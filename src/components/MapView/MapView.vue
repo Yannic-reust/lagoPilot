@@ -26,6 +26,10 @@ async function initMap() {
     maxZoom: 19,
     attribution: "Map data © OpenStreetMap contributors",
   }).addTo(map.value);
+  /*L.tileLayer("http://localhost:3650/api/maps/outdoor/256/{z}/{x}/{y}.jpg", {
+    maxZoom: 19,
+    attribution: "Map data © OpenStreetMap contributors",
+  }).addTo(map.value);*/
 }
 
 // Define a custom icon for the marker
