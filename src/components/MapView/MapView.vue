@@ -26,6 +26,8 @@ async function initMap() {
     maxZoom: 19,
     attribution: "Map data © OpenStreetMap contributors",
   }).addTo(map.value);
+  //Swisstopo map
+  // https://wmts.geo.admin.ch/1.0.0/ch.are.agglomerationsverkehr/default/{Time}/3857/{TileMatrix}/{TileCol}/{TileRow}.png"
   /*L.tileLayer("http://localhost:3650/api/maps/outdoor/256/{z}/{x}/{y}.jpg", {
     maxZoom: 19,
     attribution: "Map data © OpenStreetMap contributors",
