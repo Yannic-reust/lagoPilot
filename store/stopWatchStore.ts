@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { riderInterface } from "../types/riderInterface";
+import { add } from "ionicons/icons";
 
 export const useStopWatchStore = defineStore("stopWatch", {
   state: () => ({
@@ -39,6 +40,14 @@ export const useStopWatchStore = defineStore("stopWatch", {
     setActiveRider(riderIndex: number) {
       this.activeRiderIndex = riderIndex;
       this.activeRider = this.riders[riderIndex];
+    },
+    addRider(rider: string) {
+      this.riders.push({
+        name: rider,
+        time: 0,
+        isRunning: false,
+        intervalId: null,
+      });
     },
   },
 });
