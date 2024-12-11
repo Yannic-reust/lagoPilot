@@ -11,7 +11,7 @@
       </h3>
     </div>
     <div class="flex justify-between mx-16">
-      <ion-button>Reset</ion-button>
+      <ion-button @click="reset">Reset</ion-button>
       <ion-button
         v-if="!store.riders[store.activeRiderIndex].isRunning"
         @click="startTimer"
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { IonList, IonItem, IonLabel, IonButton } from "@ionic/vue";
+import { IonButton } from "@ionic/vue";
 import { useStopWatchStore } from "../../../store/stopWatchStore";
 import { numberToTime } from "../../../utils/numberToTime";
 
@@ -35,6 +35,10 @@ const startTimer = () => {
 const stopTimer = () => {
   store.stop();
 };
+const reset = () => {
+  store.reset();
+};
+
 onMounted(() => {
   store.setActiveRider(0);
 });

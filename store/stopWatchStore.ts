@@ -31,19 +31,10 @@ export const useStopWatchStore = defineStore("stopWatch", {
           rider.intervalId = null;
         }
       }
-      this.activeRiderIndex = 0;
     },
 
     reset() {
-      const rider = this.activeRider;
-      if (rider) {
-        rider.time = 0;
-        if (rider.isRunning && rider.intervalId !== null) {
-          clearInterval(rider.intervalId);
-          rider.intervalId = null;
-        }
-        rider.isRunning = false;
-      }
+      this.riders[this.activeRiderIndex].time = 0;
     },
     setActiveRider(riderIndex: number) {
       this.activeRiderIndex = riderIndex;
