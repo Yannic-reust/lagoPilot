@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" class="bg-white">
       <h2 class="mb-4 px-6 mt-8 text-h-md">Notruf</h2>
       <div class="grid grid-cols-1 gap-4 px-6">
         <div

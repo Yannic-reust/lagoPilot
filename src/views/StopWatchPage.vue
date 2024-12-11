@@ -1,35 +1,26 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" class="ion-padding">
-      <!-- Timer Display -->
-      <!-- <div class="timer-display">{{ activePersonTime }}</div> -->
-
-      <!-- Play/Pause Buttons -->
-      <div class="controls">
-        <ion-button @click="toggleTimer">{{
-          isRunning ? "Pause" : "Play"
-        }}</ion-button>
+      <StopWatch />
+      <!-- List of People -->
+      <div class="mt-8">
+        <ListOfPeople />
       </div>
 
-      <!-- List of People -->
-      <ion-list class="people-list">
-        <ion-item v-for="(person, index) in store.riders" :key="index" button>
-          <ion-label>
-            <h2>{{ person.name }}</h2>
-            <p>{{ person.time }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-
       <!-- Add Button -->
-      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab
+        vertical="bottom"
+        horizontal="end"
+        slot="fixed"
+        class="mb-2 mr-2"
+      >
         <ion-fab-button @click="openAddPersonDialog">
           <ion-icon :icon="addOutline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
-      <!-- Add Person Modal -->
-      <ion-modal
+      <!-- Add Person Modal export -->
+      <!-- <ion-modal
         :is-open="showAddPersonModal"
         @didDismiss="closeAddPersonDialog"
       >
@@ -41,18 +32,7 @@
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
-        <!-- export to component -->
-        <ion-content>
-          <ion-item>
-            <ion-label position="stacked">Name</ion-label>
-            <ion-input
-              v-model="newPersonName"
-              placeholder="Enter name"
-            ></ion-input>
-          </ion-item>
-          <!-- <ion-button expand="full" @click="addPerson">Add Person</ion-button> -->
-        </ion-content>
-      </ion-modal>
+      </ion-modal> -->
     </ion-content>
   </ion-page>
 </template>
@@ -77,8 +57,9 @@ import {
   IonButtons,
 } from "@ionic/vue";
 import { addOutline } from "ionicons/icons";
-
+import StopWatch from "@/components/StopWatch/StopWatch.vue";
 import { useStopWatchStore } from "../../store/stopWatchStore";
+import ListOfPeople from "@/components/ListOfPeople/ListOfPeople.vue";
 
 const store = useStopWatchStore();
 

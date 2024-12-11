@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+
+//https://coolors.co/85ffc7-297373-599090-88adad-b7caca-cfd8d8-e6e6e6-39393a
 export default {
   content: [
     "./index.html",
@@ -6,20 +8,21 @@ export default {
     "./node_modules/@ionic/vue/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    /* colors: {
-      white: "#FFFFFF",
-      lightGray: "#F8F8F8",
-      black: "#000000",
-      red: "#ff0000",
-      green: "#5dd527",
-      yellow: "#eddd00",
-      blue: "#1285ed",
-    },*/
+    colors: {
+      white: "#E6E6E6",
+      primary: "#719f9f",
+      darkGreen: "#00241B",
+      mint: "#65B891",
+    },
     fontFamily: {
       orbitron: ["Orbitron", "sans-serif"],
       muktaMahee: ["Mukta Mahee", "sans-serif"],
     },
     fontSize: {
+      "h-xl": [
+        "64px",
+        { lineHeight: "64px", fontWeight: "700", fontFamily: "Orbitron" },
+      ], // desktop title
       "h-l": [
         "32px",
         { lineHeight: "64px", fontWeight: "700", fontFamily: "Orbitron" },
