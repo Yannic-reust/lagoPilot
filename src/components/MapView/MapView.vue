@@ -21,17 +21,18 @@ const currentPosition = ref(null); // Stores the current position to pass to Spe
 
 // Initialize the map
 async function initMap() {
-  map.value = L.map("map").setView([51.505, -0.09], 13);
-  L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "Map data © OpenStreetMap contributors",
-  }).addTo(map.value);
-  //Swisstopo map
-  // https://wmts.geo.admin.ch/1.0.0/ch.are.agglomerationsverkehr/default/{Time}/3857/{TileMatrix}/{TileCol}/{TileRow}.png"
-  /*L.tileLayer("http://localhost:3650/api/maps/outdoor/256/{z}/{x}/{y}.jpg", {
-    maxZoom: 19,
-    attribution: "Map data © OpenStreetMap contributors",
-  }).addTo(map.value);*/
+  map.value = L.map("map").setView([46.8182, 8.2275], 13); // Coordinates for Switzerland
+
+  // Add Swisstopo tile layer
+  L.tileLayer(
+    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
+    {
+      maxZoom: 19,
+      attribution:
+        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
+      tileSize: 256,
+    }
+  ).addTo(map.value);
 }
 
 // Define a custom icon for the marker
