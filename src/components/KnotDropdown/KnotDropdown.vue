@@ -1,12 +1,12 @@
 <template>
-  <div class="rounded-lg bg-primary py-4 px-4">
+  <div class="rounded-lg bg-primary py-4 px-4 text-white">
     <div @click="toggleOpen" class="flex justify-between items-center">
-      <h4 class="font-bold text-h-xs">{{ props.knot.name }}</h4>
+      <h4 class="font-bold text-h-xs text-white">{{ props.knot.name }}</h4>
 
       <ion-icon
         :icon="caretBack"
         :class="{ '-rotate-90': open }"
-        class="w-6 h-6 mr-2"
+        class="w-6 h-6 mr-2 text-white"
       ></ion-icon>
     </div>
 
