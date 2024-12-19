@@ -23,8 +23,7 @@ const currentPosition = ref(null);
 async function initMap() {
   map.value = L.map("map").setView([46.8182, 8.2275], 13);
 
-  // Add Swisstopo tile layer
-  L.tileLayer(
+  const colorLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
     {
       maxZoom: 19,
@@ -32,7 +31,40 @@ async function initMap() {
         'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
       tileSize: 256,
     }
-  ).addTo(map.value);
+  );
+
+  const grayLayer = L.tileLayer(
+    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
+    {
+      maxZoom: 19,
+      attribution:
+        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
+      tileSize: 256,
+    }
+  );
+
+  const aerialLayer = L.tileLayer(
+    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg",
+    {
+      maxZoom: 19,
+      attribution:
+        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
+      tileSize: 256,
+    }
+  );
+
+  aerialLayer.addTo(map.value); // Default layer
+  //L.control.layers(baseMaps).addTo(map.value)
+  // Add Swisstopo tile layer
+  /*L.tileLayer(
+    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
+    {
+      maxZoom: 19,
+      attribution:
+        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
+      tileSize: 256,
+    }
+  ).addTo(map.value);*/
 }
 
 const customIcon = L.icon({
