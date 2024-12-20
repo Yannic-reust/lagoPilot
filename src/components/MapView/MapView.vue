@@ -17,7 +17,7 @@ import "leaflet/dist/leaflet.css";
 import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 
 // Import your GeoJSON file
-import geojsonData from "./test.json";
+import geojsonData from "./ufer.json";
 
 const map = ref(null);
 const marker = ref(null);
