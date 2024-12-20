@@ -16,6 +16,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 
+// Import your GeoJSON file
+import geojsonData from "./test.json";
+
 const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null);
@@ -32,7 +35,6 @@ async function initMap() {
       tileSize: 256,
     }
   );
-
   const grayLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
     {
@@ -53,18 +55,27 @@ async function initMap() {
     }
   );
 
-  aerialLayer.addTo(map.value); // Default layer
-  //L.control.layers(baseMaps).addTo(map.value)
-  // Add Swisstopo tile layer
-  /*L.tileLayer(
-    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
-    {
-      maxZoom: 19,
-      attribution:
-        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
-      tileSize: 256,
-    }
-  ).addTo(map.value);*/
+  aerialLayer.addTo(map.value);
+
+  // Load the GeoJSON data into the map
+  const geojsonLayer = L.geoJSON(geojsonData, {
+    style: function (feature) {
+      // Optional: Style for GeoJSON features
+      return { color: "#007BFF", weight: 2 };
+    },
+    pointToLayer: function (feature, latlng) {
+      // Optional: Customize point markers
+      return L.marker(latlng, { icon: customIcon });
+    },
+    onEachFeature: function (feature, layer) {
+      // Optional: Bind a popup to each feature
+      if (feature.properties && feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+      }
+    },
+  });
+
+  geojsonLayer.addTo(map.value);
 }
 
 const customIcon = L.icon({
@@ -77,15 +88,7 @@ const customIcon = L.icon({
 function createCircleMarker(lat, lng, popupText) {
   const circleMarkerIcon = L.divIcon({
     html: `
-      <div style="
-        width: 36px;
-        height: 36px;
-        background-color: rgba(255, 255, 255, 1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
+      <div style="width: 36px; height: 36px; background-color: rgba(255, 255, 255, 1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
         <img src="./icons/fuel-station_black.svg" style="width: 24px; height: 24px;" />
       </div>
     `,
@@ -140,7 +143,6 @@ onMounted(async () => {
     currentPosition.value = position;
   });
 
-  // Add a marker with a circular background for a point of interest
   createCircleMarker(46.73758568435726, 7.632387350914479);
 });
 </script>
