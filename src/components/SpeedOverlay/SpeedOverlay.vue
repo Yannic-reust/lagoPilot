@@ -19,6 +19,7 @@ const props = defineProps<{ position: Position | null }>();
 // Variables to store the previous position and timestamp
 let prevPosition: Position | null = null;
 let prevTimestamp: number | null = null;
+const smoothingFactor = 0.5; // Adjusts the width of the bell curve
 
 // Calculate distance between two latitude/longitude points (in meters)
 function calculateDistance(
@@ -41,6 +42,11 @@ function calculateDistance(
   return R * c; // Distance in meters
 }
 
+// Gaussian bell function
+function bellFunction(x: number, factor: number): number {
+  return Math.exp(-Math.pow(x, 2) / (2 * Math.pow(factor, 2)));
+}
+
 // Watch for position prop changes and calculate speed
 watch(
   () => props.position,
@@ -59,11 +65,17 @@ watch(
       const timeDiff =
         (currentTimestamp - (prevTimestamp ?? currentTimestamp)) / 1000; // in seconds
 
-      // Calculate speed in km/h
-      const currentSpeed = (distance / timeDiff) * 3.6;
-      speed.value = Math.round(currentSpeed);
+      // Calculate raw speed in km/h
+      const rawSpeed = (distance / timeDiff) * 3.6;
 
-      console.log("Current Speed (km/h):", speed.value);
+      // Apply bell function to smooth the speed
+      const bellAdjustedSpeed =
+        bellFunction(rawSpeed, smoothingFactor) * rawSpeed;
+
+      speed.value = Math.round(bellAdjustedSpeed);
+
+      console.log("Raw Speed (km/h):", rawSpeed);
+      console.log("Smoothed Speed (km/h):", speed.value);
     }
 
     // Update previous position and timestamp
