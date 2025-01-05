@@ -22,10 +22,12 @@ import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 import { useFuelStationsStore } from "../.././../store/fuelStations";
 import { usePortPositionsStore } from "../.././../store/portPositionsStore";
 import { useTemperatureStore } from "../.././../store/temperatureStore";
+import { useModeStore } from "../.././../store/modesStore";
 
 const storeFuelStation = useFuelStationsStore();
 const storePortStation = usePortPositionsStore();
 const storeTemperature = useTemperatureStore();
+const storeModes = useModeStore();
 
 // Import your GeoJSON file
 import geojsonData from "./ufer_150.json";
@@ -35,6 +37,8 @@ import SideBarNavigation from "../SideBarNavigation/SideBarNavigation.vue";
 const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null);
+const weatherMarker = ref([]);
+const temp = ref([]);
 
 async function initMap() {
   map.value = L.map("map", { zoomControl: false }).setView(
@@ -42,7 +46,7 @@ async function initMap() {
     13
   );
 
-  const colorLayer = L.tileLayer(
+  /*const colorLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
     {
       maxZoom: 19,
@@ -59,7 +63,7 @@ async function initMap() {
         'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
       tileSize: 256,
     }
-  );
+  );*/
 
   const aerialLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg",
@@ -79,31 +83,11 @@ async function initMap() {
       // Optional: Style for GeoJSON features
       return { color: "#65B891", weight: 3, fillOpacity: 0 };
     },
-    pointToLayer: function (feature, latlng) {
-      // Optional: Customize point markers
-      return L.marker(latlng, { icon: customIcon });
-    },
-    onEachFeature: function (feature, layer) {
-      // Optional: Bind a popup to each feature
-      if (feature.properties && feature.properties.name) {
-        layer.bindPopup(feature.properties.name);
-      }
-    },
   });
   const geojsonLayer2 = L.geoJSON(geojsonData2, {
     style: function (feature) {
       // Optional: Style for GeoJSON features
       return { color: "#00241B", weight: 3, fillOpacity: 0 };
-    },
-    pointToLayer: function (feature, latlng) {
-      // Optional: Customize point markers
-      return L.marker(latlng, { icon: customIcon });
-    },
-    onEachFeature: function (feature, layer) {
-      // Optional: Bind a popup to each feature
-      if (feature.properties && feature.properties.name) {
-        layer.bindPopup(feature.properties.name);
-      }
     },
   });
 
@@ -136,6 +120,21 @@ function createCircleMarker(lat, lng, icon) {
   );
 }
 
+function createCircleMarker2(lat, lng, icon) {
+  const circleMarkerIcon = L.divIcon({
+    html: `
+      <div style="width: 36px; height: 36px; background-color: rgba(255, 255, 255, 1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <img src="${icon}" style="width: 24px; height: 24px;" />
+      </div>
+    `,
+    className: "",
+    iconSize: [50, 50],
+    iconAnchor: [25, 25],
+    popupAnchor: [0, -25],
+  });
+  return L.marker([lat, lng], { icon: circleMarkerIcon });
+}
+
 function watchPosition(callback) {
   Geolocation.watchPosition({}, (position, err) => {
     if (position) callback(position);
@@ -149,8 +148,26 @@ const currentHour = new Date().getHours();
 const setWind = () => {
   console.log("storeTemperature.temperature[currentHour]");
 };
-const setTemperature = (temp) => {
-  createCircleMarker(temp.lang, temp.long, "./icons/temperature.svg");
+const setTemperature = (e) => {
+  temp.value.push(e);
+};
+const showTemperature = () => {
+  // Remove existing weather markers if already present
+  if (weatherMarker.value.length === 0) {
+    temp.value.forEach((temperature) => {
+      const marker = createCircleMarker2(
+        temperature.lang,
+        temperature.long,
+        "./icons/temperature.svg"
+      );
+
+      weatherMarker.value.push(marker);
+    });
+    weatherMarker.value.forEach((marker) => marker.addTo(map.value));
+  } else {
+    weatherMarker.value.forEach((marker) => map.value.removeLayer(marker));
+    weatherMarker.value = [];
+  }
 };
 
 onMounted(async () => {
@@ -161,6 +178,13 @@ onMounted(async () => {
     (newTemperature) => {
       setTemperature(newTemperature[currentHour]);
       //console.log(newTemperature[currentHour]);
+    }
+  );
+
+  watch(
+    () => storeModes.modes[1].active,
+    () => {
+      showTemperature();
     }
   );
 
