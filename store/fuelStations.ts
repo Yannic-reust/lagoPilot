@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import { fuelStationInterface } from "../types/fuelStationInterface";
 
-export const fuelStations = defineStore("fuelStations", {
+export const useFuelStationsStore = defineStore("fuelStations", {
   state: () => ({
     fuelStations: [
       {
         name: "Bootstankstelle Merligen",
-        lang: 46.69935696103335,
-        long: 7.7415917676102906,
+        imagePath: "./icons/fuel-station_black.svg",
+        lang: 46.698360053806326,
+        long: 7.737102456831085,
       },
     ] as fuelStationInterface[],
   }),

@@ -1,11 +1,9 @@
 <template>
   <div
-    class="aspect-square bg-black rounded-full flex justify-center items-center p-3"
+    class="aspect-square bg-[#e6e6e6] w-16 flex justify-center items-center rounded-full"
   >
-    <span class="flex items-end align-baseline">
-      <p class="text-4xl align-baseline">{{ speed }}</p>
-      <p class="text-xs align-baseline mb-1">km/h</p>
-    </span>
+    <p class="align-baseline text-h-md">{{ speed }}</p>
+    <!-- <p class="text-xs align-baseline mb-1">km/h</p> -->
   </div>
 </template>
 

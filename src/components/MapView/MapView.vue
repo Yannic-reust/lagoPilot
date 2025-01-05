@@ -5,6 +5,9 @@
       :position="currentPosition"
       class="absolute left-2 bottom-2 z-50"
     />
+    <div class="w-16 min-h-48 absolute right-4 top-48 z-50">
+      <SideBarNavigation />
+    </div>
   </ion-content>
 </template>
 
@@ -16,15 +19,26 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 
+import { useFuelStationsStore } from "../.././../store/fuelStations";
+import { usePortPositionsStore } from "../.././../store/portPositionsStore";
+
+const storeFuelStation = useFuelStationsStore();
+const storePortStation = usePortPositionsStore();
+
 // Import your GeoJSON file
-import geojsonData from "./ufer.json";
+import geojsonData from "./ufer_150.json";
+import geojsonData2 from "./ufer_300.json";
+import SideBarNavigation from "../SideBarNavigation/SideBarNavigation.vue";
 
 const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null);
 
 async function initMap() {
-  map.value = L.map("map").setView([46.8182, 8.2275], 13);
+  map.value = L.map("map", { zoomControl: false }).setView(
+    [46.8182, 8.2275],
+    13
+  );
 
   const colorLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
@@ -61,7 +75,23 @@ async function initMap() {
   const geojsonLayer = L.geoJSON(geojsonData, {
     style: function (feature) {
       // Optional: Style for GeoJSON features
-      return { color: "#007BFF", weight: 2 };
+      return { color: "#65B891", weight: 3, fillOpacity: 0 };
+    },
+    pointToLayer: function (feature, latlng) {
+      // Optional: Customize point markers
+      return L.marker(latlng, { icon: customIcon });
+    },
+    onEachFeature: function (feature, layer) {
+      // Optional: Bind a popup to each feature
+      if (feature.properties && feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+      }
+    },
+  });
+  const geojsonLayer2 = L.geoJSON(geojsonData2, {
+    style: function (feature) {
+      // Optional: Style for GeoJSON features
+      return { color: "#00241B", weight: 3, fillOpacity: 0 };
     },
     pointToLayer: function (feature, latlng) {
       // Optional: Customize point markers
@@ -76,6 +106,7 @@ async function initMap() {
   });
 
   geojsonLayer.addTo(map.value);
+  geojsonLayer2.addTo(map.value);
 }
 
 const customIcon = L.icon({
@@ -85,11 +116,11 @@ const customIcon = L.icon({
   popupAnchor: [0, -32],
 });
 
-function createCircleMarker(lat, lng, popupText) {
+function createCircleMarker(lat, lng, icon) {
   const circleMarkerIcon = L.divIcon({
     html: `
       <div style="width: 36px; height: 36px; background-color: rgba(255, 255, 255, 1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <img src="./icons/fuel-station_black.svg" style="width: 24px; height: 24px;" />
+        <img src="${icon}" style="width: 24px; height: 24px;" />
       </div>
     `,
     className: "",
@@ -101,10 +132,6 @@ function createCircleMarker(lat, lng, popupText) {
   const circleMarker = L.marker([lat, lng], { icon: circleMarkerIcon }).addTo(
     map.value
   );
-
-  if (popupText) {
-    circleMarker.bindPopup(popupText).openPopup();
-  }
 }
 
 function watchPosition(callback) {
@@ -143,6 +170,23 @@ onMounted(async () => {
     currentPosition.value = position;
   });
 
-  createCircleMarker(46.73758568435726, 7.632387350914479);
+  const createFuelStationMarker = () => {
+    for (const station of storeFuelStation.fuelStations) {
+      createCircleMarker(station.lang, station.long, station.imagePath);
+    }
+  };
+
+  const createPortsMarker = () => {
+    for (const station of storePortStation.ports) {
+      createCircleMarker(
+        station.lang,
+        station.long,
+        "./icons/anchor_black.svg"
+      );
+    }
+  };
+
+  createFuelStationMarker();
+  createPortsMarker();
 });
 </script>
