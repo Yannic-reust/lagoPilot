@@ -1,5 +1,9 @@
 <style scoped></style>
 <template>
+  <div
+    :class="{ ' bg-black/40': store.modes[3].active }"
+    class="absolute top-0 left-0 w-screen h-screen z-50 pointer-events-none"
+  ></div>
   <ion-app>
     <ion-tabs>
       <ion-tab tab="home">
@@ -62,6 +66,7 @@ import {
   IonTab,
 } from "@ionic/vue";
 import { home, stopwatch, boat, options } from "ionicons/icons";
+import { useModeStore } from "../store/modesStore";
 
 export default {
   components: {
@@ -85,6 +90,7 @@ export default {
       stopwatch,
       boat,
       options,
+      store: useModeStore(),
     };
   },
 };

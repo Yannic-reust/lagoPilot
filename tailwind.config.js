@@ -13,6 +13,7 @@ export default {
       primary: "#719f9f",
       darkGreen: "#00241B",
       mint: "#65B891",
+      black: "#000000",
     },
     fontFamily: {
       orbitron: ["Orbitron", "sans-serif"],
