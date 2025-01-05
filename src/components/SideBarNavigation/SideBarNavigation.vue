@@ -27,47 +27,33 @@ const store = useModeStore();
 const toggleModes = (i: number) => {
   icons.value[i].active = !icons.value[i].active;
 
-  switch (i) {
-    case 0:
-      store.toggleMode(i);
-
-      break;
-    case 1:
-      store.toggleMode(i);
-
-      break;
-    case 2:
-      store.toggleMode(i);
-
-      break;
-    case 3:
-      store.toggleMode(i);
-
-      break;
-    default:
-      console.log("Unknown mode");
-  }
+  store.toggleMode(i);
 };
 
 const icons = ref([
   {
     name: "wind",
-    url: "../../../public/icons/wind.svg",
+    url: "./icons/wind.svg",
+    active: false,
+  },
+  {
+    name: "temperatur",
+    url: "./icons/temperature.svg",
     active: false,
   },
   {
     name: "anchor",
-    url: "../../../public/icons/anchor_black.svg",
+    url: "./icons/anchor_black.svg",
     active: false,
   },
   {
     name: "ship",
-    url: "../../../public/icons/ship.svg",
+    url: "./icons/ship.svg",
     active: false,
   },
   {
     name: "moon",
-    url: "../../../public/icons/moon.svg",
+    url: "./icons/moon.svg",
     active: false,
   },
 ]);

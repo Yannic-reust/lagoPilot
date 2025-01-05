@@ -10,6 +10,10 @@ export const useModeStore = defineStore("mode", {
       },
       {
         active: false,
+        name: "temperatur",
+      },
+      {
+        active: false,
         name: "anchor",
       },
       {
@@ -28,7 +32,6 @@ export const useModeStore = defineStore("mode", {
   actions: {
     toggleMode(i: number) {
       this.modes[i].active = !this.modes[i].active;
-      console.log(i);
     },
 
     reset() {},

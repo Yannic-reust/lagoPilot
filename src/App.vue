@@ -1,7 +1,7 @@
 <style scoped></style>
 <template>
   <div
-    :class="{ ' bg-black/40': store.modes[3].active }"
+    :class="{ ' bg-black/40': store.modes[4].active }"
     class="absolute top-0 left-0 w-screen h-screen z-50 pointer-events-none"
   ></div>
   <ion-app>

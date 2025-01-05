@@ -24,6 +24,7 @@
     "@ionic/vue-router": "^8.0.0",
     "ionicons": "^7.0.0",
     "leaflet": "^1.9.4",
+    "openmeteo": "^1.1.4",
     "pinia": "^2.2.6",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"

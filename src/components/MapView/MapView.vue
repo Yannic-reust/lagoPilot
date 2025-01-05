@@ -21,9 +21,15 @@ import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
 
 import { useFuelStationsStore } from "../.././../store/fuelStations";
 import { usePortPositionsStore } from "../.././../store/portPositionsStore";
+import { useTemperatureStore } from "../.././../store/temperatureStore";
 
 const storeFuelStation = useFuelStationsStore();
 const storePortStation = usePortPositionsStore();
+const storeTemperature = useTemperatureStore();
+
+storeTemperature.pullData();
+const currentHour = new Date().getHours();
+console.log(storeTemperature.temperature);
 
 // Import your GeoJSON file
 import geojsonData from "./ufer_150.json";
