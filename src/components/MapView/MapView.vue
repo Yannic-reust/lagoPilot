@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { IonContent } from "@ionic/vue";
 import { Geolocation } from "@capacitor/geolocation";
 import L from "leaflet";
@@ -26,10 +26,6 @@ import { useTemperatureStore } from "../.././../store/temperatureStore";
 const storeFuelStation = useFuelStationsStore();
 const storePortStation = usePortPositionsStore();
 const storeTemperature = useTemperatureStore();
-
-storeTemperature.pullData();
-const currentHour = new Date().getHours();
-console.log(storeTemperature.temperature);
 
 // Import your GeoJSON file
 import geojsonData from "./ufer_150.json";
@@ -147,8 +143,26 @@ function watchPosition(callback) {
   });
 }
 
+storeTemperature.pullData();
+const currentHour = new Date().getHours();
+
+const setWind = () => {
+  console.log("storeTemperature.temperature[currentHour]");
+};
+const setTemperature = (temp) => {
+  createCircleMarker(temp.lang, temp.long, "./icons/temperature.svg");
+};
+
 onMounted(async () => {
   await initMap();
+
+  watch(
+    () => storeTemperature.temperature,
+    (newTemperature) => {
+      setTemperature(newTemperature[currentHour]);
+      //console.log(newTemperature[currentHour]);
+    }
+  );
 
   const initialPosition = await Geolocation.getCurrentPosition();
   if (initialPosition) {
