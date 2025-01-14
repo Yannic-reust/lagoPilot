@@ -23,11 +23,13 @@ import { useFuelStationsStore } from "../.././../store/fuelStations";
 import { usePortPositionsStore } from "../.././../store/portPositionsStore";
 import { useTemperatureStore } from "../.././../store/temperatureStore";
 import { useModeStore } from "../.././../store/modesStore";
+import { useBoatStoreStop } from "../.././../store/boatStopStore";
 
 const storeFuelStation = useFuelStationsStore();
 const storePortStation = usePortPositionsStore();
 const storeTemperature = useTemperatureStore();
 const storeModes = useModeStore();
+const boatStoreStop = useBoatStoreStop();
 
 // Import your GeoJSON file
 import geojsonData from "./ufer_150.json";
@@ -38,6 +40,7 @@ const map = ref(null);
 const marker = ref(null);
 const currentPosition = ref(null);
 const weatherMarker = ref([]);
+const boatMarker = ref([]);
 const temp = ref([]);
 
 async function initMap() {
@@ -145,9 +148,9 @@ function watchPosition(callback) {
 storeTemperature.pullData();
 const currentHour = new Date().getHours();
 
-const setWind = () => {
+/*const setWind = () => {
   console.log("storeTemperature.temperature[currentHour]");
-};
+};*/
 const setTemperature = (e) => {
   temp.value.push(e);
 };
@@ -170,6 +173,24 @@ const showTemperature = () => {
   }
 };
 
+const showBoatStopAndBoatLine = () => {
+  if (boatMarker.value.length === 0) {
+    boatStoreStop.boatStop.forEach((stop) => {
+      const marker = createCircleMarker2(
+        stop.lang,
+        stop.long,
+        "./icons/ship.svg"
+      );
+
+      boatMarker.value.push(marker);
+    });
+    boatMarker.value.forEach((marker) => marker.addTo(map.value));
+  } else {
+    boatMarker.value.forEach((marker) => map.value.removeLayer(marker));
+    boatMarker.value = [];
+  }
+};
+
 onMounted(async () => {
   await initMap();
 
@@ -182,9 +203,15 @@ onMounted(async () => {
   );
 
   watch(
-    () => storeModes.modes[1].active,
+    () => storeModes.modes[0].active,
     () => {
       showTemperature();
+    }
+  );
+  watch(
+    () => storeModes.modes[1].active,
+    () => {
+      showBoatStopAndBoatLine();
     }
   );
 

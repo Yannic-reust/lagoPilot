@@ -4,18 +4,18 @@ import { modesInterface } from "../types/modesInterface";
 export const useModeStore = defineStore("mode", {
   state: () => ({
     modes: [
-      {
+      /*  {
         active: false,
         name: "wind",
-      },
+      },*/
       {
         active: false,
         name: "temperatur",
       },
-      {
+      /*  {
         active: false,
         name: "anchor",
-      },
+      },*/
       {
         active: false,
         name: "ship",
