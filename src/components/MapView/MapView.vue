@@ -155,7 +155,6 @@ const showTemperature = () => {
         temperature.long,
         roundToOneDecimalPlace(temperature.temp)
       );
-      console.log(temperature);
 
       weatherMarker.value.push(marker);
     });
