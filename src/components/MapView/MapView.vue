@@ -34,6 +34,7 @@ const boatStoreStop = useBoatStoreStop();
 // Import your GeoJSON file
 import geojsonData from "./ufer_150.json";
 import geojsonData2 from "./ufer_300.json";
+import geojsonData3 from "./boatStopTour.json";
 import SideBarNavigation from "../SideBarNavigation/SideBarNavigation.vue";
 
 const map = ref(null);
@@ -93,9 +94,16 @@ async function initMap() {
       return { color: "#00241B", weight: 3, fillOpacity: 0 };
     },
   });
+  const geojsonLayer3 = L.geoJSON(geojsonData3, {
+    style: function (feature) {
+      // Optional: Style for GeoJSON features
+      return { color: "#FF0000", weight: 3, fillOpacity: 0 };
+    },
+  });
 
   geojsonLayer.addTo(map.value);
   geojsonLayer2.addTo(map.value);
+  geojsonLayer3.addTo(map.value);
 }
 
 const customIcon = L.icon({
