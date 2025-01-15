@@ -32,8 +32,8 @@ const storeModes = useModeStore();
 const boatStoreStop = useBoatStoreStop();
 
 // Import your GeoJSON file
-import geojsonData from "./ufer_150.json";
-import geojsonData2 from "./ufer_300.json";
+import ufer_150 from "./ufer_150.json";
+import ufer_300 from "./ufer_300.json";
 import geojsonData3 from "./boatStopTour.json";
 import SideBarNavigation from "../SideBarNavigation/SideBarNavigation.vue";
 
@@ -50,25 +50,6 @@ async function initMap() {
     13
   );
 
-  /*const colorLayer = L.tileLayer(
-    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
-    {
-      maxZoom: 19,
-      attribution:
-        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
-      tileSize: 256,
-    }
-  );
-  const grayLayer = L.tileLayer(
-    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
-    {
-      maxZoom: 19,
-      attribution:
-        'Map data © <a href="https://www.swisstopo.admin.ch/en/home.html">Swisstopo</a>',
-      tileSize: 256,
-    }
-  );*/
-
   const aerialLayer = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg",
     {
@@ -81,29 +62,20 @@ async function initMap() {
 
   aerialLayer.addTo(map.value);
 
-  // Load the GeoJSON data into the map
-  const geojsonLayer = L.geoJSON(geojsonData, {
+  const ufer_150_layer = L.geoJSON(ufer_150, {
     style: function (feature) {
-      // Optional: Style for GeoJSON features
       return { color: "#65B891", weight: 3, fillOpacity: 0 };
     },
   });
-  const geojsonLayer2 = L.geoJSON(geojsonData2, {
+  const ufer_300_layer = L.geoJSON(ufer_300, {
     style: function (feature) {
-      // Optional: Style for GeoJSON features
       return { color: "#00241B", weight: 3, fillOpacity: 0 };
     },
   });
 
-  geojsonLayer.addTo(map.value);
-  geojsonLayer2.addTo(map.value);
+  ufer_150_layer.addTo(map.value);
+  ufer_300_layer.addTo(map.value);
 }
-const geojsonLayer3 = L.geoJSON(geojsonData3, {
-  style: function (feature) {
-    // Optional: Style for GeoJSON features
-    return { color: "#FF0000", weight: 3, fillOpacity: 0 };
-  },
-});
 
 const customIcon = L.icon({
   iconUrl: "arrow.png",
@@ -125,12 +97,25 @@ function createCircleMarker(lat, lng, icon) {
     popupAnchor: [0, -25],
   });
 
-  const circleMarker = L.marker([lat, lng], { icon: circleMarkerIcon }).addTo(
-    map.value
-  );
+  L.marker([lat, lng], { icon: circleMarkerIcon }).addTo(map.value);
+}
+function createTemperaturMarker(lat, lng, temp) {
+  const circleMarkerIcon = L.divIcon({
+    html: `
+      <div style="width: 36px; height: 36px; background-color: rgba(255, 255, 255, 1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <p style="font-size:16px; "><b>${temp}°</b></p>
+      </div>
+    `,
+    className: "",
+    iconSize: [50, 50],
+    iconAnchor: [25, 25],
+    popupAnchor: [0, -25],
+  });
+
+  return L.marker([lat, lng], { icon: circleMarkerIcon });
 }
 
-function createCircleMarker2(lat, lng, icon) {
+function createRemovableCircleMarker(lat, lng, icon) {
   const circleMarkerIcon = L.divIcon({
     html: `
       <div style="width: 36px; height: 36px; background-color: rgba(255, 255, 255, 1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -152,24 +137,25 @@ function watchPosition(callback) {
   });
 }
 
+function roundToOneDecimalPlace(number) {
+  return Math.round(number * 10) / 10;
+}
+
 storeTemperature.pullData();
 const currentHour = new Date().getHours();
 
-/*const setWind = () => {
-  console.log("storeTemperature.temperature[currentHour]");
-};*/
 const setTemperature = (e) => {
   temp.value.push(e);
 };
 const showTemperature = () => {
-  // Remove existing weather markers if already present
   if (weatherMarker.value.length === 0) {
     temp.value.forEach((temperature) => {
-      const marker = createCircleMarker2(
+      const marker = createTemperaturMarker(
         temperature.lang,
         temperature.long,
-        "./icons/temperature.svg"
+        roundToOneDecimalPlace(temperature.temp)
       );
+      console.log(temperature);
 
       weatherMarker.value.push(marker);
     });
@@ -180,10 +166,16 @@ const showTemperature = () => {
   }
 };
 
+const boatLine = L.geoJSON(geojsonData3, {
+  style: function (feature) {
+    return { color: "#808080", weight: 2, fillOpacity: 0, dashArray: "5, 5" };
+  },
+});
+
 const showBoatStopAndBoatLine = () => {
   if (boatMarker.value.length === 0) {
     boatStoreStop.boatStop.forEach((stop) => {
-      const marker = createCircleMarker2(
+      const marker = createRemovableCircleMarker(
         stop.lang,
         stop.long,
         "./icons/ship.svg"
@@ -192,11 +184,22 @@ const showBoatStopAndBoatLine = () => {
       boatMarker.value.push(marker);
     });
     boatMarker.value.forEach((marker) => marker.addTo(map.value));
-    geojsonLayer3.addTo(map.value);
+    boatLine.addTo(map.value);
   } else {
     boatMarker.value.forEach((marker) => map.value.removeLayer(marker));
-    map.value.removeLayer(geojsonLayer3);
+    map.value.removeLayer(boatLine);
     boatMarker.value = [];
+  }
+};
+const createFuelStationMarker = () => {
+  for (const station of storeFuelStation.fuelStations) {
+    createCircleMarker(station.lang, station.long, station.imagePath);
+  }
+};
+
+const createPortsMarker = () => {
+  for (const station of storePortStation.ports) {
+    createCircleMarker(station.lang, station.long, "./icons/anchor_black.svg");
   }
 };
 
@@ -207,7 +210,6 @@ onMounted(async () => {
     () => storeTemperature.temperature,
     (newTemperature) => {
       setTemperature(newTemperature[currentHour]);
-      //console.log(newTemperature[currentHour]);
     }
   );
 
@@ -249,22 +251,6 @@ onMounted(async () => {
 
     currentPosition.value = position;
   });
-
-  const createFuelStationMarker = () => {
-    for (const station of storeFuelStation.fuelStations) {
-      createCircleMarker(station.lang, station.long, station.imagePath);
-    }
-  };
-
-  const createPortsMarker = () => {
-    for (const station of storePortStation.ports) {
-      createCircleMarker(
-        station.lang,
-        station.long,
-        "./icons/anchor_black.svg"
-      );
-    }
-  };
 
   createFuelStationMarker();
   createPortsMarker();
