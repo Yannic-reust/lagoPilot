@@ -11,6 +11,11 @@
           <p>{{ numberToTime(person.time) }}</p>
         </div>
       </ion-item>
+      <ion-item v-if="store.riders.length === 0">
+        <div class="flex justify-between flex-row items-center w-full">
+          <h2>Add a Person...</h2>
+        </div>
+      </ion-item>
     </ion-list>
   </div>
 </template>

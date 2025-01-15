@@ -30,10 +30,10 @@ const alertInputs = ref([
   },
 ]);
 const resetAlertInputs = () => {
-  console.log("resetting");
   const input = document.getElementById("passwordInput");
+
   if (input) {
-    input.value = "";
+    (input as HTMLInputElement).value = "";
   }
 };
 const alertButtons = [

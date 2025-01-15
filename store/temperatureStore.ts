@@ -52,6 +52,11 @@ export const useTemperatureStore = defineStore("temperature", {
           const utcOffsetSeconds = response.utcOffsetSeconds();
           const hourly = response.hourly();
 
+          if (!hourly) {
+            console.error("Hourly data is null");
+            continue;
+          }
+
           // Helper function to form time ranges
           const range = (start: number, stop: number, step: number) =>
             Array.from(
@@ -62,7 +67,7 @@ export const useTemperatureStore = defineStore("temperature", {
           const weatherData = {
             hourly: {
               time: range(
-                Number(hourly.time()),
+                Number(hourly.time() || 0),
                 Number(hourly.timeEnd()),
                 hourly.interval()
               ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
