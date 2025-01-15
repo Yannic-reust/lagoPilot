@@ -94,17 +94,16 @@ async function initMap() {
       return { color: "#00241B", weight: 3, fillOpacity: 0 };
     },
   });
-  const geojsonLayer3 = L.geoJSON(geojsonData3, {
-    style: function (feature) {
-      // Optional: Style for GeoJSON features
-      return { color: "#FF0000", weight: 3, fillOpacity: 0 };
-    },
-  });
 
   geojsonLayer.addTo(map.value);
   geojsonLayer2.addTo(map.value);
-  geojsonLayer3.addTo(map.value);
 }
+const geojsonLayer3 = L.geoJSON(geojsonData3, {
+  style: function (feature) {
+    // Optional: Style for GeoJSON features
+    return { color: "#FF0000", weight: 3, fillOpacity: 0 };
+  },
+});
 
 const customIcon = L.icon({
   iconUrl: "arrow.png",
@@ -193,8 +192,10 @@ const showBoatStopAndBoatLine = () => {
       boatMarker.value.push(marker);
     });
     boatMarker.value.forEach((marker) => marker.addTo(map.value));
+    geojsonLayer3.addTo(map.value);
   } else {
     boatMarker.value.forEach((marker) => map.value.removeLayer(marker));
+    map.value.removeLayer(geojsonLayer3);
     boatMarker.value = [];
   }
 };
