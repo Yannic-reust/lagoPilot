@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "vue-tsc && vite build",
+    "sync ios": "npx cap sync ios",
+    "open ios": "npx cap open ios"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
@@ -17,7 +19,7 @@
     "@capacitor/core": "6.1.2",
     "@capacitor/geolocation": "^6.0.1",
     "@capacitor/haptics": "6.0.1",
-    "@capacitor/ios": "^6.1.2",
+    "@capacitor/ios": "^6.2.0",
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/vue": "^8.0.0",
