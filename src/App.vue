@@ -30,7 +30,7 @@
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home">
           <ion-icon :icon="home" />
-          <ion-label>Home< 1</ion-label>
+          <ion-label>Home</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="stopWatch">
           <ion-icon :icon="stopwatch" />
