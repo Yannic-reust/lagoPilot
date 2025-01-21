@@ -230,7 +230,7 @@ onMounted(async () => {
   const initialPosition = await Geolocation.getCurrentPosition();
 
   if (initialPosition) {
-    console.log(initialPosition);
+    //console.log(initialPosition);
     const { latitude, longitude } = initialPosition.coords;
     map.value.setView([latitude, longitude], 13);
     marker.value = L.marker([latitude, longitude], {
