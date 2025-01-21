@@ -2,7 +2,7 @@
   <ion-content>
     <div id="map" class="z-40" style="height: 100%"></div>
     <SpeedOverlay
-      :position="currentPosition"
+      :geolocation="geolocation"
       class="absolute left-2 bottom-2 z-50"
     />
     <div class="w-16 min-h-48 absolute right-4 top-48 z-50">
@@ -39,10 +39,16 @@ import SideBarNavigation from "../SideBarNavigation/SideBarNavigation.vue";
 
 const map = ref(null);
 const marker = ref(null);
+
 const currentPosition = ref(null);
+
 const weatherMarker = ref([]);
 const boatMarker = ref([]);
 const temp = ref([]);
+
+const props = defineProps({
+  geolocation: Object,
+});
 
 async function initMap() {
   map.value = L.map("map", { zoomControl: false }).setView(
@@ -128,13 +134,6 @@ function createRemovableCircleMarker(lat, lng, icon) {
     popupAnchor: [0, -25],
   });
   return L.marker([lat, lng], { icon: circleMarkerIcon });
-}
-
-function watchPosition(callback) {
-  Geolocation.watchPosition({}, (position, err) => {
-    if (position) callback(position);
-    if (err) console.error("Error watching position:", err);
-  });
 }
 
 function roundToOneDecimalPlace(number) {
@@ -226,33 +225,18 @@ onMounted(async () => {
   );
   createFuelStationMarker();
   createPortsMarker();
-
-  const initialPosition = await Geolocation.getCurrentPosition();
-
-  if (initialPosition) {
+  console.log(props);
+  if (props.geolocation) {
+    console.log("geolocation");
     //console.log(initialPosition);
-    const { latitude, longitude } = initialPosition.coords;
+    const { latitude, longitude } = props.geolocation.coords;
     map.value.setView([latitude, longitude], 13);
     marker.value = L.marker([latitude, longitude], {
       icon: customIcon,
     }).addTo(map.value);
-    currentPosition.value = initialPosition;
+    currentPosition.value = props.geolocation;
   }
 
   map.value.invalidateSize();
-
-  watchPosition((position) => {
-    const { latitude, longitude } = position.coords;
-    if (marker.value) {
-      marker.value.setLatLng([latitude, longitude]);
-    } else {
-      marker.value = L.marker([latitude, longitude], {
-        icon: customIcon,
-      }).addTo(map.value);
-    }
-    map.value.setView([latitude, longitude], map.value.getZoom());
-
-    currentPosition.value = position;
-  });
 });
 </script>

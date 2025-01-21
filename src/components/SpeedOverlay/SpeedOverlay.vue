@@ -2,7 +2,7 @@
   <div
     class="aspect-square bg-[#e6e6e6] w-16 flex justify-center items-center rounded-full"
   >
-    <p class="align-baseline text-h-md">{{ speed ? speed : "0" }}</p>
+    <!-- <p class="align-baseline text-h-md">{{ speed ? speed : "0" }}</p> -->
     <!-- <p class="text-xs align-baseline mb-1">km/h</p> -->
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { Geolocation, type Position } from "@capacitor/geolocation";
-
+/*
 const speed = ref<any>(null);
 const updatePosition = async () => {
   const position = await Geolocation.getCurrentPosition({
@@ -23,7 +23,7 @@ const updatePosition = async () => {
 
 onMounted(() => {
   setInterval(updatePosition, 1000);
-});
+});*/
 
 /*let lastPosition: Position | null = null;
 
