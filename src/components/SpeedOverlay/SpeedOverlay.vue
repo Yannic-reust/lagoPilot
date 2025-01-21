@@ -20,30 +20,6 @@ let prevTimestamp: number | null = null;
 const smoothingFactor = 0.5; // Adjusts the width of the bell curve
 
 // Calculate distance between two latitude/longitude points (in meters)
-function calculateDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const R = 6371e3; // Radius of Earth in meters
-  const φ1 = (lat1 * Math.PI) / 180;
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-  const a =
-    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c; // Distance in meters
-}
-
-// Gaussian bell function
-function bellFunction(x: number, factor: number): number {
-  return Math.exp(-Math.pow(x, 2) / (2 * Math.pow(factor, 2)));
-}
 
 // Watch for position prop changes and calculate speed
 watch(
@@ -66,14 +42,7 @@ watch(
       // Calculate raw speed in km/h
       const rawSpeed = (distance / timeDiff) * 3.6;
 
-      // Apply bell function to smooth the speed
-      const bellAdjustedSpeed =
-        bellFunction(rawSpeed, smoothingFactor) * rawSpeed;
-
-      speed.value = Math.round(bellAdjustedSpeed);
-
       console.log("Raw Speed (km/h):", rawSpeed);
-      console.log("Smoothed Speed (km/h):", speed.value);
     }
 
     // Update previous position and timestamp
