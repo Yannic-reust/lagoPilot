@@ -30,11 +30,10 @@ const updatePosition = async () => {
   });
 
   geolocation.value = position;
-  console.log("update");
 
-  if (position.coords.speed != null) {
+  /*if (position.coords.speed != null) {
     console.log("cords:", position.coords.speed * 3.6);
-  }
+  }*/
   //console.log("update");
 };
 

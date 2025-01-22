@@ -2,7 +2,7 @@
   <ion-content>
     <div id="map" class="z-40" style="height: 100%"></div>
     <SpeedOverlay
-      :geolocation="geolocation"
+      :geolocation="geolocationProp"
       class="absolute left-2 bottom-2 z-50"
     />
     <div class="w-16 min-h-48 absolute right-4 top-48 z-50">
@@ -14,7 +14,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { IonContent } from "@ionic/vue";
-import { Geolocation } from "@capacitor/geolocation";
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import SpeedOverlay from "@/components/SpeedOverlay/SpeedOverlay.vue";
@@ -45,6 +45,8 @@ const currentPosition = ref(null);
 const weatherMarker = ref([]);
 const boatMarker = ref([]);
 const temp = ref([]);
+
+const geolocationProp = ref(null);
 
 const props = defineProps({
   geolocation: Object,
@@ -194,7 +196,6 @@ const createFuelStationMarker = () => {
     createCircleMarker(station.lang, station.long, station.imagePath);
   }
 };
-
 const createPortsMarker = () => {
   for (const station of storePortStation.ports) {
     createCircleMarker(station.lang, station.long, "./icons/anchor_black.svg");
@@ -223,20 +224,24 @@ onMounted(async () => {
       showBoatStopAndBoatLine();
     }
   );
+
+  watch(
+    () => props.geolocation,
+    (newGeolocation) => {
+      if (newGeolocation) {
+        geolocationProp.value = newGeolocation;
+
+        const { latitude, longitude } = geolocationProp.value.coords;
+        map.value.setView([latitude, longitude]);
+        marker.value = L.marker([latitude, longitude], {
+          icon: customIcon,
+        }).addTo(map.value);
+        currentPosition.value = geolocationProp.value;
+      }
+      map.value.invalidateSize();
+    }
+  );
   createFuelStationMarker();
   createPortsMarker();
-  console.log(props);
-  if (props.geolocation) {
-    console.log("geolocation");
-    //console.log(initialPosition);
-    const { latitude, longitude } = props.geolocation.coords;
-    map.value.setView([latitude, longitude], 13);
-    marker.value = L.marker([latitude, longitude], {
-      icon: customIcon,
-    }).addTo(map.value);
-    currentPosition.value = props.geolocation;
-  }
-
-  map.value.invalidateSize();
 });
 </script>
