@@ -2,12 +2,11 @@
   <ion-page>
     <ion-content :fullscreen="true" class="ion-padding">
       <StopWatch />
-      <!-- List of People -->
+
       <div class="mt-8">
         <ListOfPeople />
       </div>
 
-      <!-- Add Button -->
       <ion-fab
         vertical="bottom"
         horizontal="end"
@@ -19,7 +18,6 @@
         </ion-fab-button>
       </ion-fab>
 
-      <!-- add Person -->
       <AddPersonModal
         @close="closeAddPersonDialog"
         :isOpen="showAddPersonModal"

@@ -31,21 +31,12 @@ const toggleModes = (i: number) => {
 };
 
 const icons = ref([
-  /* {
-    name: "wind",
-    url: "./icons/wind.svg",
-    active: false,
-  },*/
   {
     name: "temperatur",
     url: "./icons/temperature.svg",
     active: false,
   },
-  /* {
-    name: "anchor",
-    url: "./icons/anchor_black.svg",
-    active: false,
-  },*/
+
   {
     name: "ship",
     url: "./icons/ship.svg",

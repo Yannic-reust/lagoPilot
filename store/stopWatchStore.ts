@@ -4,10 +4,7 @@ import { add } from "ionicons/icons";
 
 export const useStopWatchStore = defineStore("stopWatch", {
   state: () => ({
-    riders: [
-      /*  { name: "Tibo", time: 0, isRunning: false, intervalId: null },
-      { name: "Peter", time: 0, isRunning: false, intervalId: null },*/
-    ] as riderInterface[],
+    riders: [] as riderInterface[],
     activeRider: {} as riderInterface | null,
     activeRiderIndex: 0,
   }),

@@ -21,11 +21,6 @@
           <BoatPage />
         </div>
       </ion-tab>
-      <!-- <ion-tab tab="options">
-        <div id="options-page">
-          <OptionsPage />
-        </div>
-      </ion-tab> -->
 
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home">
@@ -40,10 +35,6 @@
           <ion-icon :icon="boat" />
           <ion-label>Boat</ion-label>
         </ion-tab-button>
-        <!-- <ion-tab-button tab="options">
-          <ion-icon :icon="options" />
-          <ion-label>Options</ion-label>
-        </ion-tab-button> -->
       </ion-tab-bar>
     </ion-tabs>
   </ion-app>
@@ -52,7 +43,7 @@
 <script lang="ts">
 import StopWatchPage from "@/views/StopWatchPage.vue";
 import BoatPage from "@/views/BoatPage.vue";
-import OptionsPage from "@/views/OptionsPage.vue";
+
 import HomePage from "@/views/HomePage.vue";
 import {
   IonTabs,
@@ -81,7 +72,7 @@ export default {
     HomePage,
     StopWatchPage,
     BoatPage,
-    OptionsPage,
+
     IonTab,
   },
   data() {

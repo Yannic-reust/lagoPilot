@@ -1,5 +1,4 @@
 <template>
-  <!-- <ion-button id="present-alert">Click Me</ion-button> -->
   <ion-alert
     trigger="addPerson-alert"
     header="Person hinzufügen"
@@ -13,9 +12,7 @@ import { IonAlert } from "@ionic/vue";
 
 import { useStopWatchStore } from "../../../store/stopWatchStore";
 import { onMounted, ref } from "vue";
-/*const handleAlertDismiss = () => {
-  console.log("dismissed");
-};*/
+
 const store = useStopWatchStore();
 const handleFormSubmission = (data: any) => {
   if (data[0] === "") return;

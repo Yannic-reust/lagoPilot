@@ -1,11 +1,5 @@
 <template>
   <ion-page>
-    <!-- <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Home</ion-title>
-      </ion-toolbar>
-    </ion-header> -->
-
     <ion-content :fullscreen="true">
       <MapView :geolocation="geolocation" />
     </ion-content>
@@ -30,11 +24,6 @@ const updatePosition = async () => {
   });
 
   geolocation.value = position;
-
-  /*if (position.coords.speed != null) {
-    console.log("cords:", position.coords.speed * 3.6);
-  }*/
-  //console.log("update");
 };
 
 onMounted(() => {

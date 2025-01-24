@@ -3,7 +3,6 @@
     class="aspect-square bg-[#e6e6e6] w-16 flex justify-center items-center rounded-full"
   >
     <p class="align-baseline text-h-md">{{ smoothedSpeed }}</p>
-    <!-- <p class="text-xs align-baseline mb-1">km/h</p> -->
   </div>
 </template>
 

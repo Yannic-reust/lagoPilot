@@ -14,8 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { IonIcon } from "@ionic/vue";
-import { caretBack } from "ionicons/icons";
+
 import { emergencyNumbersInterface } from "../../../types/emergencyNumbersInterface";
 
 const props = defineProps<{ numbers: emergencyNumbersInterface }>();
