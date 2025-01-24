@@ -1,0 +1,29 @@
+/* src/main.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+:root {
+  --ion-color-primary: #719f9f;
+  --ion-color-primary-rgb: 0, 102, 0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+
+  --ion-tab-bar-color: #e6e6e6;
+  --ion-color-primary-shade: #8db2b2;
+  --background-focused: #8db2b2;
+}
+ion-tab-bar,
+ion-tab-button {
+  background-color: #4f4f50;
+}
