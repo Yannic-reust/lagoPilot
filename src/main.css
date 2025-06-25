@@ -1,7 +1,5 @@
 /* src/main.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 .v-enter-active,
 .v-leave-active {
