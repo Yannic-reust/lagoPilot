@@ -1,7 +1,7 @@
 <template>
-  <div class="rounded-lg bg-primary py-4 px-4">
+  <div class="rounded-lg bg-green text-white py-4 px-4">
     <div @click="toggleOpen" class="flex justify-between items-center">
-      <h4 class="font-bold text-h-xs">{{ props.knot.name }}</h4>
+      <h4 class="font-bold text-h-xs !mt-0 !mb-0">{{ props.knot.name }}</h4>
 
       <ion-icon
         :icon="caretBack"

@@ -11,6 +11,12 @@
   opacity: 0;
 }
 
+@theme {
+  --color-white: #ffffff;
+  --color-black: #000;
+  --color-green: #719f9f;
+}
+
 :root {
   --ion-color-primary: #719f9f;
   --ion-color-primary-rgb: 0, 102, 0;
@@ -20,6 +26,10 @@
   --ion-tab-bar-color: #e6e6e6;
   --ion-color-primary-shade: #8db2b2;
   --background-focused: #8db2b2;
+
+  --color-white: #ffffff;
+  --color-black: #000;
+  --color-green: #719f9f;
 }
 ion-tab-bar,
 ion-tab-button {
